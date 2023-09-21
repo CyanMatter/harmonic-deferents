@@ -1,0 +1,28 @@
+{
+  "name": "harmonic-deferents",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro build",
+		"dev:rsw": "concurrently \"rsw watch\" \"astro dev\"",
+		"build:rsw": "concurrently \"rsw build\" \"astro build\"",
+		"rsw": "rsw",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+  "dependencies": {
+    "astro": "^1.6.15"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "prettier": "^2.8.1",
+    "prettier-plugin-astro": "^0.7.0",
+    "vite-plugin-rsw": "^2.0.11",
+    "webdev-configs": "^1.2.0"
+  },
+  "license": "LGPL-3.0-or-later",
+  "author": "CyanMatter"
+}
