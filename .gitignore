@@ -27,5 +27,6 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# IDE
+# IDEs
 .vs
+*.code-workspace

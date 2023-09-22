@@ -1,56 +1,47 @@
 use nannou::prelude::*;
 
 use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
+use nannou::rand::{{distributions::Uniform, Rng}, thread_rng};
 use std::cell::RefCell;
 
 pub struct Model;
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
+fn bound_rand_vec(n: usize, low: f32, high: f32) -> Vec<f32> {
+	let bounds = Uniform::from(low..high);
+	thread_rng()
+		.sample_iter(&bounds)
+		.take(n)
+		.collect()
+}
+
+macro_rules! zip_2_vecs {
+		($v:ident, $u:ident) => {
+				$v.iter().zip($u.iter())
+		};
+}
+
 fn view(app: &App, _model: &Model, frame: Frame) {
-	// Begin drawing
-	let win = app.window_rect();
-	let t = app.time;
-	let draw = app.draw();
+	let win: Rect<f32> = app.window_rect();
+	let draw: Draw = app.draw();
 
-	// Clear the background to blue.
-	draw.background().color(BLACK);
+	// Clear the background
+	draw.background().color(PALEGOLDENROD);
 
-	// Create an `ngon` of points.
-	let n_points = 4;
-	let radius = win.w().min(win.h()) * 0.25;
-	let points = (0..n_points).map(|i| {
-		let fract = i as f32 / n_points as f32;
-		let phase = fract;
-		let x = radius * (TAU * phase).cos();
-		let y = radius * (TAU * phase).sin();
-		pt2(x, y)
-	});
-	draw.polygon()
-		.x(-win.w() * 0.25)
-		.color(WHITE)
-		.rotate(-t * 0.1)
-		.stroke(PINK)
-		.stroke_weight(20.0)
+	const N_POINTS: usize = 8;
+	let xs: Vec<f32> = bound_rand_vec(N_POINTS, win.left(), win.right());
+	let ys: Vec<f32> = bound_rand_vec(N_POINTS, win.bottom(), win.top());
+	let vertices: Vec<Point2> = zip_2_vecs!(xs, ys)
+		.map(|(&x, &y)| pt2(x, y))
+		.collect();
+
+	const WEIGHT: f32 = 6.0;
+
+	draw.polyline()
+		.weight(WEIGHT)
 		.join_round()
-		.points(points);
-
-	// Do the same, but give each point a unique colour.
-	let n_points = 3;
-	let points_colored = (0..n_points).map(|i| {
-		let fract = i as f32 / n_points as f32;
-		let phase = fract;
-		let x = radius * (TAU * phase).cos();
-		let y = radius * (TAU * phase).sin();
-		let r = fract;
-		let g = 1.0 - fract;
-		let b = (0.5 + fract) % 1.0;
-		(pt2(x, y), rgb(r, g, b))
-	});
-	draw.polygon()
-		.x(win.w() * 0.25)
-		.rotate(t * 0.2)
-		.points_colored(points_colored);
+		.points_closed(vertices);
 
 	// Write the result of our drawing to the window's frame.
 	draw.to_frame(app, &frame).unwrap();
@@ -85,7 +76,7 @@ async fn create_window(app: &App) {
 
 	app.new_window()
 		.device_descriptor(device_desc)
-		.title("nannou web test")
+		.title("harmonic-deferents")
 		// .raw_event(raw_event)
 		// .key_pressed(key_pressed)
 		// .key_released(key_released)
