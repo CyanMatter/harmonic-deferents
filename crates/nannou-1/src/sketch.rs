@@ -17,9 +17,17 @@ fn bound_rand_vec(n: usize, low: f32, high: f32) -> Vec<f32> {
 }
 
 macro_rules! zip_2_vecs {
-		($v:ident, $u:ident) => {
-				$v.iter().zip($u.iter())
-		};
+	($v:ident, $u:ident) => {
+			$v.iter().zip($u.iter())
+	};
+}
+
+fn random_vertices(n: usize, left: f32, bottom: f32) -> Vec<Point2> {
+	let xs: Vec<f32> = bound_rand_vec(n, left, -left);
+	let ys: Vec<f32> = bound_rand_vec(n, bottom, -bottom);
+	zip_2_vecs!(xs, ys)
+		.map(|(&x, &y)| pt2(x, y))
+		.collect()
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
@@ -30,11 +38,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 	draw.background().color(PALEGOLDENROD);
 
 	const N_POINTS: usize = 8;
-	let xs: Vec<f32> = bound_rand_vec(N_POINTS, win.left(), win.right());
-	let ys: Vec<f32> = bound_rand_vec(N_POINTS, win.bottom(), win.top());
-	let vertices: Vec<Point2> = zip_2_vecs!(xs, ys)
-		.map(|(&x, &y)| pt2(x, y))
-		.collect();
+	let vertices: Vec<Point2> = random_vertices(N_POINTS, win.left(), win.bottom());
 
 	const WEIGHT: f32 = 6.0;
 
