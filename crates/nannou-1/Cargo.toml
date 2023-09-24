@@ -14,7 +14,7 @@ name = "nannou_web_compat"
 path = "src/main.rs"
 
 [lib]
-name = "nannou_web_test"
+name = "harmonic_deferents"
 path = "src/lib.rs"
 crate-type = ["cdylib"]
 
