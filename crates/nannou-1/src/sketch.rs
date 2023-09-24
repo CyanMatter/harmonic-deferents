@@ -1,53 +1,32 @@
 use nannou::prelude::*;
-
 use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
-use nannou::rand::{{distributions::Uniform, Rng}, thread_rng};
 use std::cell::RefCell;
 
-pub struct Model;
+pub mod model;
+use model::{Model, Constants};
 
-fn update(_app: &App, _model: &mut Model, _update: Update) {}
+impl Constants for Model {}
 
-fn bound_rand_vec(n: usize, low: f32, high: f32) -> Vec<f32> {
-	let bounds = Uniform::from(low..high);
-	thread_rng()
-		.sample_iter(&bounds)
-		.take(n)
-		.collect()
-}
+fn update(_app: &App, _model: &mut Model, _update: Update) {
+	let win: Rect<f32> = _app.window_rect();
+	let frame: u64 = _app.elapsed_frames();
 
-macro_rules! zip_2_vecs {
-	($v:ident, $u:ident) => {
-			$v.iter().zip($u.iter())
-	};
-}
-
-fn random_vertices(n: usize, left: f32, bottom: f32) -> Vec<Point2> {
-	let xs: Vec<f32> = bound_rand_vec(n, left, -left);
-	let ys: Vec<f32> = bound_rand_vec(n, bottom, -bottom);
-	zip_2_vecs!(xs, ys)
-		.map(|(&x, &y)| pt2(x, y))
-		.collect()
+	if frame % 256 == 0 {
+		// Every 2^8 frames, generate a new polygon
+		_model.new_random_polygon(win.left(), win.bottom());
+	}
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
 	let win: Rect<f32> = app.window_rect();
 	let draw: Draw = app.draw();
 
-	// Clear the background
-	draw.background().color(PALEGOLDENROD);
-
-	const N_POINTS: usize = 8;
-	let vertices: Vec<Point2> = random_vertices(N_POINTS, win.left(), win.bottom());
-
-	const WEIGHT: f32 = 6.0;
-
+	draw.background().color(WHITE);
 	draw.polyline()
-		.weight(WEIGHT)
+		.weight(Model::WEIGHT)
 		.join_round()
-		.points_closed(vertices);
+		.points_closed(_model.vertices.clone());
 
-	// Write the result of our drawing to the window's frame.
 	draw.to_frame(app, &frame).unwrap();
 }
 
