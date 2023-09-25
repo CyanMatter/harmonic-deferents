@@ -9,7 +9,7 @@ export default defineConfig({
 
 	outDir: './astro/dist',
 
-	site: 'http://127.0.0.1:3000/',
+	site: 'https://cyanmatter.github.io/',
 
   base: '/harmonic-deferents',
 

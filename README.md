@@ -33,4 +33,4 @@ pnpm build:rsw
 
 ## Acknowledgement
 
-Thanks to Julian Cataldo for making it possible that `nannou` and `astro` work together in this project; it was built on the boilerplate code from this [repository](https://github.com/JulianCataldo/astro-nannou-starter/commit/6194e8e52afe12b2036490d1e14d244457129269). Visit [JulianCataldo.com](https://www.juliancataldo.com).
+Thanks to Julian Cataldo for making it possible that `nannou` and `astro` work together in this project; it was built on the boilerplate code from this [repository](https://github.com/JulianCataldo/astro-nannou-starter/tree/6194e8e52afe12b2036490d1e14d244457129269). Visit [JulianCataldo.com](https://www.juliancataldo.com).
