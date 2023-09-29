@@ -1,10 +1,11 @@
-use nannou::prelude::*;
-use nannou::wgpu::{Backends, DeviceDescriptor, Limits};
+use nannou::{
+  prelude::*,
+  wgpu::{ Backends, DeviceDescriptor, Limits }
+};
 use std::cell::RefCell;
+use crate::console;
 
-pub mod model;
-use model::{Model, Constants};
-
+use crate::sketch::model::{ Model, Constants };
 impl Constants for Model {}
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {
@@ -18,7 +19,6 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
-	let win: Rect<f32> = app.window_rect();
 	let draw: Draw = app.draw();
 
 	draw.background().color(WHITE);
@@ -28,24 +28,6 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 		.points_closed(_model.vertices.clone());
 
 	draw.to_frame(app, &frame).unwrap();
-}
-
-pub async fn run_app(model: Model) {
-	// Since ModelFn is not a closure we need this workaround to pass the calculated model
-	thread_local!(static MODEL: RefCell<Option<Model>> = Default::default());
-
-	MODEL.with(|m| m.borrow_mut().replace(model));
-
-	app::Builder::new_async(|app| {
-		Box::new(async move {
-			create_window(app).await;
-			MODEL.with(|m| m.borrow_mut().take().unwrap())
-		})
-	})
-	.backends(Backends::PRIMARY | Backends::GL)
-	.update(update)
-	.run_async()
-	.await;
 }
 
 async fn create_window(app: &App) {
@@ -72,4 +54,33 @@ async fn create_window(app: &App) {
 		.build_async()
 		.await
 		.unwrap();
+
+	{
+		let header: Vec<&str> = vec![
+			&"%charmonic deferents",
+			&"color: white; font-size: 42px; background-color: black;",
+			&"\nauthor:\tCyanMatter",
+			&"\nrepo:\thttps://github.com/CyanMatter/harmonic-deferents"
+		];
+
+		console::info_all(&header);
+	}
+}
+
+pub async fn run_app(model: Model) {
+	// Since ModelFn is not a closure we need this workaround to pass the calculated model
+	thread_local!(static MODEL: RefCell<Option<Model>> = Default::default());
+
+	MODEL.with(|m| m.borrow_mut().replace(model));
+
+	app::Builder::new_async(|app| {
+		Box::new(async move {
+			create_window(app).await;
+			MODEL.with(|m| m.borrow_mut().take().unwrap())
+		})
+	})
+	.backends(Backends::PRIMARY | Backends::GL)
+	.update(update)
+	.run_async()
+	.await;
 }

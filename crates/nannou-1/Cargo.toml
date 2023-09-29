@@ -1,27 +1,32 @@
-# You must change these to your own details.
 [package]
-name = "nannou-1"
-description = "template repository to run nannou app both in native app and web browser."
+name = "harmonic_deferents"
+description = "Harmonic Deferents is a application that allows you to make music using Fourier transforms."
 version = "0.0.1"
-authors = ["You <you@example.com>"]
+authors = ["CyanMatter"]
 categories = ["wasm"]
 readme = "README.md"
 edition = "2018"
 resolver = "2" 
-
-[[bin]]
-name = "nannou_web_compat"
-path = "src/main.rs"
 
 [lib]
 name = "harmonic_deferents"
 path = "src/lib.rs"
 crate-type = ["cdylib"]
 
+[[bin]]
+name = "harmonic_deferents"
+path = "src/main.rs"
+
 [profile.release]
 # This makes the compiled code faster and smaller, but it makes compiling slower,
 # so it's only enabled in release mode.
 lto = true
+# Enable debug symbols in release mode.
+# debug = true
+
+[features]
+# If you uncomment this line, it will enable `console_error_panic_hook`:
+# default = ["console_error_panic_hook"]
 
 [dependencies]
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
@@ -30,7 +35,13 @@ wasm-bindgen = "0.2.83"
 wasm-bindgen-futures = "0.4.32"
 async-std = { version = "1.10.0", features = ["unstable"] }
 nannou = { version="0.18.1", git ="https://github.com/nannou-org/nannou.git", rev = "287be8a4d075b17332ca0bf34649f5d25e751c00", features =["wasm-experimental"]}
-
+rustfft = "6.1.0"
+js-sys = "0.3.64"
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so it should only be
+# enabled in debug mode.
+console_error_panic_hook = { version ="0.1.5", optional = true }
 
 # The `web-sys` crate allows you to interact with the various browser APIs,
 # like the DOM.
@@ -38,15 +49,8 @@ nannou = { version="0.18.1", git ="https://github.com/nannou-org/nannou.git", re
 version = "0.3.22"
 features = ["console"]
 
-# The `console_error_panic_hook` crate provides better debugging of panics by
-# logging them with `console.error`. This is great for development, but requires
-# all the `std::fmt` and `std::panicking` infrastructure, so it's only enabled
-# in debug mode.
-[target."cfg(debug_assertions)".dependencies]
-console_error_panic_hook = "0.1.5"
-
 # # These crates are used for running unit tests.
 [dev-dependencies]
 wasm-bindgen-test = "0.3.33"
-futures = "0.1.27"
+futures = "0.3.28"
 js-sys = "0.3.22"

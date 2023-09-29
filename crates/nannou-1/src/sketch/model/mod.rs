@@ -1,6 +1,10 @@
-use nannou::prelude::Point2;
-
+// src/sketch/model
 mod figure;
+mod epicycle;
+#[cfg(test)]
+mod tests;
+
+use nannou::prelude::Point2;
 use figure::random_vertices;
 
 pub struct Model {

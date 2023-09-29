@@ -1,8 +1,11 @@
 // native app entry_point
-
 mod sketch;
+mod console;
+mod util;
+
+use sketch::{ run_app, Model };
 use async_std::task::block_on;
-use sketch::{run_app, model::Model};
+
 fn main() {
 	let model = Model { ..Default::default() };
 	block_on(async {
