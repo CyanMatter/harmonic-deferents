@@ -21,16 +21,31 @@ fn compute(pt: &Complex<f32>, fq: i64) -> Epicycle {
 }
 
 pub fn construct(data: &Vec<Complex<f32>>) -> Vec<Epicycle> {
-  // Initialize
-  let nyquist: usize = data.len() / 2;
-  let epicycles = &Vec::<Epicycle>::with_capacity(data.len());
+  assert!(data.len() > 0);
+  
+  // Initialize.
+  let nyquist = (data.len() / 2) as i64;
+  let mut epicycles = Vec::<Epicycle>::with_capacity(data.len());
   let mut it = data.iter();
 
-  // Compute the first epicycle; it always has frequency = 0.
-  let e: Epicycle = compute(
-    it.next().expect("There should be at least one item in `data.`"),
-    0);
+  // Construct the first epicycle; it always has frequency = 0.
+  let e = compute(it.next().unwrap(), 0);
+  epicycles.push(e);
 
-  //continue
-  return Vec::<Epicycle>::new();
+  // Construct most other epicycles.
+  for fq in 1..nyquist {
+    epicycles.push(compute(it.next().unwrap(), fq));
+    epicycles.push(compute(it.next().unwrap(), -fq));
+  }
+
+  // Construct the last epicycle(s).
+  epicycles.push(compute(it.next().unwrap(), nyquist));
+  if data.len() % 2 != 0 {
+    epicycles.push(compute(it.next().unwrap(), -nyquist));
+  }
+
+  // Filter out all epicycles with 0 radius.
+  return epicycles.into_iter()
+    .filter(|e| e.radius > 0_f32)
+    .collect();
 }
