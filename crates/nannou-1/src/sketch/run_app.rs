@@ -13,6 +13,7 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {
 	let frame: u64 = _app.elapsed_frames();
 
 	if frame % 256 == 0 {
+		// !Debug
 		// Every 2^8 frames, generate a new polygon
 		_model.new_random_polygon(win.left(), win.bottom());
 	}

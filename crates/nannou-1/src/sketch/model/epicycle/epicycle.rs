@@ -1,5 +1,3 @@
-// A special epicycle that has a frequency of 0
-
 pub struct Epicycle {
   pub radius: f32,
   pub frequency: i64,
@@ -41,6 +39,7 @@ impl Epicycle {
   }
 }
 
+// A special epicycle that has a radius of 0.
 pub trait Null {
   const NULL: Epicycle = Epicycle {
     radius: 0_f32,
