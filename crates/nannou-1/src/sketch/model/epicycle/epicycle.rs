@@ -1,41 +1,38 @@
+use nannou::prelude::{ Point2, pt2 };
+use rustfft::num_complex::Complex;
+
 pub struct Epicycle {
   pub radius: f32,
   pub frequency: i64,
   pub phase: f32,
-  pub vector: Position,
+  pub vector: Point2,
 }
 
-pub struct Position {
-  pub x: f32,
-  pub y: f32,
-  pub t: f32
-}
-
-pub fn position_at_absolute_offset(time: f32, radius: f32, frequency: i64, phase: f32) -> Position {
+fn vector(time: f32, radius: f32, frequency: i64, phase: f32) -> Point2 {
   let c: f32 = (frequency as f32) * time + phase;
-  Position {
-    x: radius * c.cos(),
-    y: radius * c.sin(),
-    t: time
-  }
+  let x: f32 = radius * c.cos();
+  let y: f32 = radius * c.sin();
+  pt2(x, y)
 }
-
-pub fn position_at_root(radius: f32, frequency: i64, phase: f32) -> Position {
-  position_at_absolute_offset(1_f32, radius, frequency, phase)
-}
-
 
 impl Epicycle {
-  fn update_position_to_absolute_offset(&mut self, time: f32) {
-    self.vector = position_at_absolute_offset(time, self.radius, self.frequency, self.phase);
+  pub fn vector_at(&mut self, time: f32) -> Point2 {
+    self.vector = vector(time, self.radius, self.frequency, self.phase);
+    return self.vector;
   }
 
-  fn update_position_to_relative_offset(&mut self, time: f32) {
-    self.vector = position_at_absolute_offset(self.vector.t + time, self.radius, self.frequency, self.phase);
-  }
+  pub fn from_data(cfd: &Complex<f32>, fq: i64) -> Epicycle {
+    let r: f32 = (cfd.re * cfd.re + cfd.im * cfd.im).sqrt();
+    if r == 0_f32 { return Epicycle::NULL; }
 
-  fn update_position_to_root(&mut self) {
-    self.vector = position_at_absolute_offset(1_f32, self.radius, self.frequency, self.phase);
+    let ph: f32 = cfd.im.atan2(cfd.re);
+    let v = vector(0_f32, r, fq, ph);
+    Epicycle {
+      radius: r,
+      frequency: fq,
+      phase: ph,
+      vector: v
+    }
   }
 }
 
@@ -45,10 +42,6 @@ pub trait Null {
     radius: 0_f32,
     frequency: 0,
     phase: 0_f32,
-    vector: Position {
-      x: 0_f32,
-      y: 0_f32,
-      t: 1_f32
-    }
+    vector: Point2::ZERO,
   };
 }

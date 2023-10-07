@@ -1,10 +1,10 @@
 // src/sketch/model/epicycle
 mod epicycle;
 mod construct;
-mod draw;
+mod compute_render;
 
 pub use {
   epicycle::*,
   construct::*,
-  draw::*,
+  compute_render::*,
 };

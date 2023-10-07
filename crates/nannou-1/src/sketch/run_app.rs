@@ -22,11 +22,22 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {
 fn view(app: &App, _model: &Model, frame: Frame) {
 	let draw: Draw = app.draw();
 
+	// Draw all components
+	// Background
 	draw.background().color(WHITE);
+	// Random polygon
 	draw.polyline()
 		.weight(Model::WEIGHT)
 		.join_round()
 		.points_closed(_model.vertices.clone());
+	// Epicycles
+	for ellipse in _model.ellipses.clone() {
+		draw.a(ellipse);
+	}
+	// Epicycle path
+	draw.polyline()
+		.join_round()
+		.points(_model.epicycle_path.clone());
 
 	draw.to_frame(app, &frame).unwrap();
 }

@@ -30,3 +30,4 @@ pnpm-debug.log*
 # IDEs
 .vs
 *.code-workspace
+astro.config.mjs
