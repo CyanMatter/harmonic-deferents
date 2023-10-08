@@ -18,8 +18,8 @@ permissions:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build_and_test:
-    name: Build & test
+  build:
+    name: Build
     runs-on: ubuntu-20.04
 
     steps:
@@ -97,15 +97,19 @@ jobs:
       - name: Build Astro website
         run: pnpm build
 
-      # ————————————————————————————————————————————————————————————————————————
-
+  tests:
+    name: Tests
+    needs: build
+    runs-on: ubuntu-20.04
+    
+    steps:
       - name: Run tests
         working-directory: crates/nannou-1
         run: cargo test
 
   deploy:
     name: Deploy
-    needs: build_and_test
+    needs: [build, tests]
     runs-on: ubuntu-20.04
     environment:
       name: github-pages

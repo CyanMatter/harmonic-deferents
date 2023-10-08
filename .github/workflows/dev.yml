@@ -20,8 +20,8 @@ permissions:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build_and_test:
-    name: Build & test
+  build:
+    name: Build
     runs-on: ubuntu-20.04
 
     steps:
@@ -100,7 +100,13 @@ jobs:
         run: pnpm build
 
       # ————————————————————————————————————————————————————————————————————————
-
+  
+  tests:
+    name: Tests
+    needs: build
+    runs-on: ubuntu-20.04
+    
+    steps:
       - name: Run tests
         working-directory: crates/nannou-1
         run: cargo test
