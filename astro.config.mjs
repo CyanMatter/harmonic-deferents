@@ -15,5 +15,13 @@ export default defineConfig({
 
   vite: {
     plugins: [ViteRsw()],
+    server: {
+      watch: {
+        ignored: [
+          '**/harmonic-deferents/crates/nannou-1/src/**',
+          '**/harmonic-deferents/crates/nannou-1/target/**',
+        ],
+      }
+    }
   },
 });
