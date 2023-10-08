@@ -1,4 +1,4 @@
-name: Build, test, and deploy
+name: Build, test, deploy
 
 on:
   push:
@@ -106,7 +106,7 @@ jobs:
 
       - name: Run tests
         working-directory: crates/nannou-1
-        run: cargo test
+        run: cargo test --quiet
 
   deploy:
     name: Deploy
