@@ -1,4 +1,4 @@
-name: Build
+name: Build & Tests
 
 on:
   push:
@@ -23,8 +23,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-        # with:
-        #   ref: ${{ github.ref }}
+        with:
+          ref: ${{ github.ref }}
 
       # ————————————————————————————————————————————————————————————————————————
 
@@ -94,18 +94,12 @@ jobs:
 
       - name: Build Astro Website
         run: pnpm build
-  
-  test:
-    name: Test
-    needs: build
-    runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: crates/nannou-1
-    steps:
-      - name: Run tests
-        run: cargo test --verbose
 
+      # ————————————————————————————————————————————————————————————————————————
+
+      - name: Run tests
+        working-directory: crates/nannou-1
+        run: cargo test --verbose
 
   deploy:
     if: ${{ github.ref_name == 'master' }}
