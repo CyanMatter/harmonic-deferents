@@ -25,8 +25,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
 
       # ————————————————————————————————————————————————————————————————————————
 
@@ -103,6 +101,9 @@ jobs:
     runs-on: ubuntu-20.04
     
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Run tests
         working-directory: crates/nannou-1
         run: cargo test
