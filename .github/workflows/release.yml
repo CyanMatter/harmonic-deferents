@@ -1,8 +1,10 @@
-name: Deploy — [Demo]
+name: Build
 
 on:
   push:
-    branches: [master]
+    branches: [**]
+  pull_request:
+    branches: [**]
 
   workflow_dispatch:
 
@@ -14,8 +16,8 @@ permissions:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build_and_test:
-    name: Build and test
+  build:
+    name: Build
     runs-on: ubuntu-20.04
 
     steps:
@@ -97,13 +99,20 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./astro/dist
-
+  
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
       - name: Run tests
         run: cargo test --verbose
 
+
   deploy:
+    if: ${{ github.ref_name == 'master' }}
     name: Deploy
-    needs: build_and_test
+    needs: build
     runs-on: ubuntu-20.04
     environment:
       name: github-pages
