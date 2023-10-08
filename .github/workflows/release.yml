@@ -94,16 +94,14 @@ jobs:
 
       - name: Build Astro Website
         run: pnpm build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./astro/dist
   
   test:
     name: Test
     needs: build
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./crates/nannou-1
     steps:
       - name: Run tests
         run: cargo test --verbose
@@ -119,6 +117,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./astro/dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
