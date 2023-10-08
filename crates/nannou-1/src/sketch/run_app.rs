@@ -36,6 +36,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 	}
 	// Epicycle path
 	draw.polyline()
+		.weight(Model::WEIGHT)
 		.join_round()
 		.points(_model.epicycle_path.clone());
 
@@ -72,7 +73,8 @@ async fn create_window(app: &App) {
 			&"%charmonic deferents",
 			&"color: white; font-size: 42px; background-color: black;",
 			&"\nauthor:\tCyanMatter",
-			&"\nrepo:\thttps://github.com/CyanMatter/harmonic-deferents"
+			&"\nrepo:\thttps://github.com/CyanMatter/harmonic-deferents",
+			&"\n"
 		];
 
 		console::info_all(&header);
