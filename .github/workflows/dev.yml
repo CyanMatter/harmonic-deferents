@@ -3,10 +3,12 @@ name: Build, test, and deploy
 on:
   push:
     branches:
-      - 'master'
+      - '**'
+      - '!master'
   pull_request:
     branches:
-      - 'master'
+      - '**'
+      - '!master'
 
   workflow_dispatch:
 
@@ -102,21 +104,3 @@ jobs:
       - name: Run tests
         working-directory: crates/nannou-1
         run: cargo test
-
-  deploy:
-    name: Deploy
-    needs: build_and_test
-    runs-on: ubuntu-20.04
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./astro/dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
