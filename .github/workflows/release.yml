@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: ./crates/nannou-1
+        working-directory: crates/nannou-1
     steps:
       - name: Run tests
         run: cargo test --verbose
