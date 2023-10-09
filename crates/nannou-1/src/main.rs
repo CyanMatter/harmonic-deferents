@@ -1,9 +1,5 @@
 // native app entry_point
-mod sketch;
-mod console;
-mod util;
-
-use sketch::{ run_app, Model };
+use harmonic_deferents::sketch::{ run_app, Model };
 use async_std::task::block_on;
 
 fn main() {

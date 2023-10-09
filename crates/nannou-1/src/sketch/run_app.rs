@@ -70,11 +70,11 @@ async fn create_window(app: &App) {
 
 	{
 		let header: Vec<&str> = vec![
-			&"%charmonic deferents",
-			&"color: white; font-size: 42px; background-color: black;",
-			&"\nauthor:\tCyanMatter",
-			&"\nrepo:\thttps://github.com/CyanMatter/harmonic-deferents",
-			&"\n"
+			"%charmonic deferents",
+			"color: white; font-size: 42px; background-color: black;",
+			"\nauthor:\tCyanMatter",
+			"\nrepo:\thttps://github.com/CyanMatter/harmonic-deferents",
+			"\n"
 		];
 
 		console::info_all(&header);

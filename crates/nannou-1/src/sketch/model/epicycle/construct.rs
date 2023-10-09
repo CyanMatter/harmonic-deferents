@@ -8,7 +8,7 @@ impl Null for Epicycle {}
  */
 //TODO: this is parallelizable and (nannou::)wgpu provide improvement.
 pub fn epicycles_from_cfds(data: &Vec<Complex<f32>>) -> Vec<Epicycle> {
-  assert!(data.len() > 0);
+  assert!(!data.is_empty());
   
   // Initialize.
   let nyquist = (data.len() / 2) as i64;
@@ -31,7 +31,7 @@ pub fn epicycles_from_cfds(data: &Vec<Complex<f32>>) -> Vec<Epicycle> {
   }
 
   // Filter out all epicycles with 0 radius.
-  return epicycles.into_iter()
+  epicycles.into_iter()
     .filter(|e| e.radius > 0_f32)
-    .collect();
+    .collect()
 }

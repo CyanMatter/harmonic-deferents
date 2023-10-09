@@ -1,4 +1,5 @@
 use super::*;
+use self::epicycle::Epicycle;
 use crate::{fourier::fft, util::zip_2_vecs};
 use nannou::prelude::{ Point2, pt2 };
 use rustfft::num_complex::Complex32;
@@ -53,5 +54,9 @@ fn compute_epicycles_from_polyline() {
   fft(&mut cfds);
   let res: Vec<Epicycle> = epicycles_from_cfds(&cfds);
 
-  assert!((zip_2_vecs!(res, exp)).all(|&res: Epicycle, &exp: Epicycle| res.equals(exp)));
+  assert!(
+    zip_2_vecs!(res, exp).all(|(res, exp)|
+      res.equals(exp)
+    )
+  );
 }

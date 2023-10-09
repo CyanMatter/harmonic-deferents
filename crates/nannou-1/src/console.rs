@@ -23,7 +23,7 @@ pub fn log(msg: impl Into<String>) {
   log_1(&JsValue::from_str(&msg.into()));
 }
 
-pub fn log_all(msgs: &Vec<&str>) {
+pub fn log_all(msgs: &[&str]) {
   /* Outputs multiple messages to the client's web console.
    * 
    * # Arguments
@@ -43,7 +43,7 @@ pub fn info(msg: impl Into<String>) {
   info_1(&JsValue::from_str(&msg.into()));
 }
 
-pub fn info_all(msgs: &Vec<&str>) {
+pub fn info_all(msgs: &[&str]) {
   /* Outputs multiple informational messages to the client's web console.
    * 
    * # Arguments
@@ -63,7 +63,7 @@ pub fn warn(msg: impl Into<String>) {
   warn_1(&JsValue::from_str(&msg.into()));
 }
 
-pub fn warn_all(msgs: &Vec<&str>) {
+pub fn warn_all(msgs: &[&str]) {
   /* Outputs multiple messages to the client's web console.
    * 
    * # Arguments
@@ -73,8 +73,8 @@ pub fn warn_all(msgs: &Vec<&str>) {
   web_sys_warn(&as_js_array(msgs));
 }
 
-fn as_js_array(v: &Vec<&str>) -> js_sys::Array {
-  v.into_iter()
+fn as_js_array(v: &[&str]) -> js_sys::Array {
+  v.iter()
       .map(|x| JsValue::from_str(x))
       .collect::<js_sys::Array>()
 }

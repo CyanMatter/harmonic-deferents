@@ -1,10 +1,10 @@
 // src/sketch/model
-mod figure;
-mod epicycle;
+pub mod figure;
+pub mod epicycle;
 #[cfg(test)]
 mod tests;
 
-use nannou::{prelude::{ Point2, pt2 }, draw::primitive::ellipse::Ellipse };
+use nannou::{prelude::Point2, draw::primitive::ellipse::Ellipse };
 use rustfft::num_complex::Complex32;
 use figure::random_vertices;
 use self::epicycle::{ Epicycle, epicycles_from_cfds, compute_all_renders };

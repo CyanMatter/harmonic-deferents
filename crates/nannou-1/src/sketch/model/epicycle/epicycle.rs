@@ -18,7 +18,7 @@ fn vector(time: f32, radius: f32, frequency: i64, phase: f32) -> Point2 {
 impl Epicycle {
   pub fn vector_at(&mut self, time: f32) -> Point2 {
     self.vector = vector(time, self.radius, self.frequency, self.phase);
-    return self.vector;
+    self.vector
   }
 
   pub fn equals(&self, other: &Epicycle) -> bool {

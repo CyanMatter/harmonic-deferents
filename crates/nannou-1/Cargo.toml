@@ -1,21 +1,12 @@
 [package]
 name = "harmonic_deferents"
-description = "Harmonic Deferents is a application that allows you to make music using Fourier transforms."
+description = "Harmonic Deferents is an application that allows you to make music with Fourier transforms."
 version = "0.0.1"
 authors = ["CyanMatter"]
 categories = ["wasm"]
 readme = "README.md"
 edition = "2018"
-resolver = "2" 
-
-[lib]
-name = "harmonic_deferents"
-path = "src/lib.rs"
-crate-type = ["cdylib"]
-
-[[bin]]
-name = "harmonic_deferents"
-path = "src/main.rs"
+resolver = "2"
 
 [profile.release]
 # This makes the compiled code faster and smaller, but it makes compiling slower,

@@ -1,7 +1,7 @@
-mod console;
-mod fourier;
-mod sketch;
-mod util;
+pub mod console;
+pub mod fourier;
+pub mod sketch;
+pub mod util;
 
 use wasm_bindgen::prelude::wasm_bindgen;
 use async_std::task::block_on;
