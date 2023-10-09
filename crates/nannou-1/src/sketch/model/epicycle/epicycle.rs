@@ -21,6 +21,14 @@ impl Epicycle {
     return self.vector;
   }
 
+  pub fn equals(&self, other: &Epicycle) -> bool {
+    self.radius == other.radius
+      && self.frequency == other.frequency
+      && self.phase == other.phase
+      && self.vector == other.vector
+  }
+
+  // why is this implemented in the struct instead of just in the module?
   pub fn from_data(cfd: &Complex<f32>, fq: i64) -> Epicycle {
     let r: f32 = (cfd.re * cfd.re + cfd.im * cfd.im).sqrt();
     if r == 0_f32 { return Epicycle::NULL; }

@@ -21,8 +21,8 @@ fn randomized() {
   // This test tests whether any errors pop up, so there is no checking against a result in this test.
   let dist = Uniform::from(f32::MIN..f32::MAX);
   let random_numbers = thread_rng().sample_iter(&dist);
-  let real_vec = random_numbers.take(64).collect();
-  let imag_vec = random_numbers.take(64).collect();
+  let real_vec: Vec<Complex32> = random_numbers.take(64).collect();
+  let imag_vec: Vec<Complex32> = random_numbers.take(64).collect();
   let mut complex_numbers = zip_2_vecs!(real_vec, imag_vec)
     .map(|&real, &imag| Complex { re: real, im: imag })
     .collect();

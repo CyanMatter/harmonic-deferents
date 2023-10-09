@@ -8,6 +8,7 @@ use nannou::{prelude::{ Point2, pt2 }, draw::primitive::ellipse::Ellipse };
 use rustfft::num_complex::Complex32;
 use figure::random_vertices;
 use self::epicycle::{ Epicycle, epicycles_from_cfds, compute_all_renders };
+use crate::fourier::fft;
 
 pub struct Model {
 	pub t_elapsed: f32,
@@ -35,15 +36,25 @@ impl Default for Model {
 	}
 }
 
-fn vec2_to_complex(pt: Point2) -> Complex32 {
-	Complex32 {
-		re: pt.x,
-		im: pt.y
+trait ToComplex32 {
+	fn as_complex32(&self) -> Complex32;
+}
+trait ToMultiComplex32 {
+	fn as_complex32_vec(&self) -> Vec<Complex32>;
+}
+
+impl ToComplex32 for Point2 {
+	fn as_complex32(&self) -> Complex32 {
+		Complex32 { re: self.x, im: self.y }
 	}
 }
 
-fn complex_to_vec2(c: Complex32) -> Point2 {
-	pt2(c.re, c.im)
+impl ToMultiComplex32 for Vec<Point2> {
+	fn as_complex32_vec(&self) -> Vec<Complex32> {
+		self.iter()
+			.map(|v2| v2.as_complex32())
+			.collect()
+	}
 }
 
 impl Model {
@@ -51,10 +62,9 @@ impl Model {
 		//! Debug
     self.vertices = random_vertices(Model::N_POINTS, left, bottom);
 		// Conversion from similar structs Point2 -> Complex32 needed.
-		let cfds: Vec<Complex32> = self.vertices.iter()
-			.map(|v2| vec2_to_complex(*v2))
-			.collect();
+		let mut cfds: Vec<Complex32> = self.vertices.as_complex32_vec();
 		// Create epicycles that describe the sequence of vertices.
+		fft(&mut cfds);
 		self.epicycles = epicycles_from_cfds(&cfds);
 		compute_all_renders(self);
   }

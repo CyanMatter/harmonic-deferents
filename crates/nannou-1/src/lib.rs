@@ -1,5 +1,6 @@
-mod sketch;
 mod console;
+mod fourier;
+mod sketch;
 mod util;
 
 use wasm_bindgen::prelude::wasm_bindgen;
