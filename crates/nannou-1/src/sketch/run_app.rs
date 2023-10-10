@@ -15,7 +15,7 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {
 	if frame % 256 == 0 {
 		// !Debug
 		// Every 2^8 frames, generate a new polygon
-		_model.new_random_polygon(win.left(), win.bottom());
+		_model.new_random_polygon(win.left() / 8_f32, win.bottom() / 8_f32);
 	}
 }
 
@@ -25,20 +25,26 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 	// Draw all components
 	// Background
 	draw.background().color(WHITE);
+	// Epicycles
+	for ellipse in _model.ellipses.clone() {
+		draw.a(ellipse)
+			.stroke(nannou::color::CRIMSON)
+			.stroke_weight(Model::WEIGHT)
+			.finish();
+	}
 	// Random polygon
 	draw.polyline()
 		.weight(Model::WEIGHT)
 		.join_round()
-		.points_closed(_model.vertices.clone());
-	// Epicycles
-	for ellipse in _model.ellipses.clone() {
-		draw.a(ellipse);
-	}
+		.points_closed(_model.vertices.clone())
+		.finish();
 	// Epicycle path
 	draw.polyline()
 		.weight(Model::WEIGHT)
 		.join_round()
-		.points(_model.epicycle_path.clone());
+		.color(nannou::color::DODGERBLUE)
+		.points(_model.epicycle_path.clone())
+		.finish();
 
 	draw.to_frame(app, &frame).unwrap();
 }
