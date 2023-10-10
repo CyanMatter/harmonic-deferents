@@ -55,8 +55,7 @@ fn compute_epicycles_from_polyline() {
   let res: Vec<Epicycle> = epicycles_from_cfds(&cfds);
 
   assert!(
-    zip_2_vecs!(res, exp).all(|(res, exp)|
-      res.equals(exp)
-    )
+    zip_2_vecs!(res, exp)
+    .all(|(res, exp)| res.equals(exp))
   );
 }
