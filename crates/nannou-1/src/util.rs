@@ -1,7 +1,7 @@
-macro_rules! zip_2_vecs {
+macro_rules! zip2 {
 	($v:ident, $u:ident) => {
 			$v.iter().zip($u.iter())
 	};
 }
 
-pub(crate) use zip_2_vecs;
+pub(crate) use zip2;

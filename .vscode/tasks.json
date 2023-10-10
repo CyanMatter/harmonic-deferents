@@ -11,6 +11,18 @@
 			"problemMatcher": [],
 			"label": "npm: build:rsw",
 			"detail": "concurrently \"rsw build\" \"astro build\""
+		},
+		{
+			"type": "cargo",
+			"command": "test",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "test",
+			"options": {
+				"cwd": "${workspaceFolder}/crates/nannou-1"
+    	},
+			"label": "rust: cargo test"
 		}
 	]
 }

@@ -1,8 +1,6 @@
 use rustfft::num_complex::Complex;
 use super::epicycle::*;
 
-impl Null for Epicycle {}
-
 /* Takes complex numbers in the frequency domain (here named CFDs) that were produced by a Fourier transform,
  * and produces the epicycles that describe the sequence that was used in that Fourier transform.
  */
