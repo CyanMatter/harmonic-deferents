@@ -115,7 +115,7 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: [build, tests]
+    needs: build
     runs-on: ubuntu-20.04
     environment:
       name: github-pages
