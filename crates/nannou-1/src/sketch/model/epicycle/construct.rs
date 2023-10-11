@@ -14,18 +14,18 @@ pub fn epicycles_from_cfds(data: &Vec<Complex<f32>>) -> Vec<Epicycle> {
   let mut it = data.iter();
 
   // Construct the first epicycle; it always has frequency = 0.
-  epicycles.push(Epicycle::from_data(it.next().unwrap(), 0));
+  epicycles.push(from_data(it.next().unwrap(), 0));
 
   // Construct most other epicycles.
   for fq in 1..nyquist {
-    epicycles.push(Epicycle::from_data(it.next().unwrap(), fq));
-    epicycles.push(Epicycle::from_data(it.next().unwrap(), -fq));
+    epicycles.push(from_data(it.next().unwrap(), fq));
+    epicycles.push(from_data(it.next().unwrap(), -fq));
   }
 
   // Construct the last epicycle(s).
-  epicycles.push(Epicycle::from_data(it.next().unwrap(), nyquist));
+  epicycles.push(from_data(it.next().unwrap(), nyquist));
   if data.len() % 2 != 0 {
-    epicycles.push(Epicycle::from_data(it.next().unwrap(), -nyquist));
+    epicycles.push(from_data(it.next().unwrap(), -nyquist));
   }
 
   // Filter out all epicycles with 0 radius.

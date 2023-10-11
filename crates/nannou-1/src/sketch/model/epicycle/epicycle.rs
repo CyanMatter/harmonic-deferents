@@ -39,9 +39,8 @@ fn vector(time: f32, radius: f32, frequency: i64, phase: f32) -> Point2 {
 }
 
 impl Epicycle {
-  pub fn vector_at(&mut self, time: f32) -> Point2 {
+  pub fn vector_at(&mut self, time: f32) {
     self.vector = vector(time, self.radius, self.frequency, self.phase);
-    self.vector
   }
 
   pub fn approx_eq(&self, other: &Epicycle, radius_err: f32, phase_err: f32, vector_err: Point2) -> bool {
@@ -50,20 +49,19 @@ impl Epicycle {
     (self.vector - other.vector).abs().cmple(vector_err + pt2(std::f32::EPSILON, std::f32::EPSILON)).all() &&
     (self.frequency == other.frequency)
   }
+}
 
-  // why is this implemented in the struct instead of just in the module?
-  pub fn from_data(cfd: &Complex<f32>, fq: i64) -> Epicycle {
-    let temp: f32 = cfd.re * cfd.re + cfd.im * cfd.im;
-    if temp == 0_f32 { return Epicycle::NULL; }
-    let r: f32 = temp.sqrt();
+pub fn from_data(cfd: &Complex<f32>, fq: i64) -> Epicycle {
+  let temp: f32 = cfd.re * cfd.re + cfd.im * cfd.im;
+  if temp == 0_f32 { return Epicycle::NULL; }
+  let r: f32 = temp.sqrt();
 
-    let ph: f32 = cfd.im.atan2(cfd.re);
-    let v = vector(0_f32, r, fq, ph);
-    Epicycle {
-      radius: r,
-      frequency: fq,
-      phase: ph,
-      vector: v
-    }
+  let ph: f32 = cfd.im.atan2(cfd.re);
+  let v = vector(0_f32, r, fq, ph);
+  Epicycle {
+    radius: r,
+    frequency: fq,
+    phase: ph,
+    vector: v
   }
 }

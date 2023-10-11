@@ -1,5 +1,5 @@
 use super::*;
-use self::epicycle::Epicycle;
+use self::epicycle::{ Epicycle, epicycles_from_cfds };
 use crate::{fourier::fft, util::zip2};
 use nannou::prelude::{ Point2, pt2 };
 use rustfft::num_complex::Complex32;

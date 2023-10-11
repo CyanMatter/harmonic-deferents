@@ -4,19 +4,21 @@ use nannou::{
 };
 use std::cell::RefCell;
 use crate::console;
+use super::model::{ Model, Constants, epicycle::compute_all_renders };
 
-use crate::sketch::model::{ Model, Constants };
 impl Constants for Model {}
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {
 	let win: Rect<f32> = _app.window_rect();
-	let frame: u64 = _app.elapsed_frames();
 
-	if frame % 256 == 0 {
+	if _model.is_repeat_period {
 		// !Debug
 		// Every 2^8 frames, generate a new polygon
 		_model.new_random_polygon(win.left() / 8_f32, win.bottom() / 8_f32);
 	}
+
+	_model.advance_time(_update.since_last);
+	compute_all_renders(_model);
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
@@ -30,6 +32,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 		draw.a(ellipse)
 			.stroke(nannou::color::CRIMSON)
 			.stroke_weight(Model::WEIGHT)
+			.no_fill()
 			.finish();
 	}
 	// Random polygon
