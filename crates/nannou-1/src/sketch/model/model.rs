@@ -42,8 +42,6 @@ impl Model {
   }
 
 	pub fn advance_time(&mut self, t_since_last_update: Duration) {
-    crate::console::log(format!("t_since_last_update:\t{:?}\nt_elapsed:\t{:?}\nt_period:\t{:?}\nt_frac_of_period_elapsed:\t{:?}", t_since_last_update, self.t_elapsed, self.t_period, self.t_frac_of_period_elapsed));
-
     if self.is_repeat_period { self.is_repeat_period = false; }
 		self.t_elapsed += t_since_last_update.as_millis();
     if self.t_elapsed >= self.t_period {
@@ -51,7 +49,5 @@ impl Model {
       self.is_repeat_period = true;
     }
     self.t_frac_of_period_elapsed = self.t_fq * (self.t_elapsed as f32);
-
-    crate::console::log(format!("t_since_last_update:\t{:?}\nt_elapsed:\t{:?}\nt_period:\t{:?}\nt_frac_of_period_elapsed:\t{:?}", t_since_last_update, self.t_elapsed, self.t_period, self.t_frac_of_period_elapsed));
 	}
 }
