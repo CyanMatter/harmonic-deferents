@@ -1,7 +1,7 @@
 use super::*;
 use self::epicycle::{ Epicycle, epicycles_from_cfds };
 use crate::{fourier::fft, util::zip2};
-use nannou::prelude::{ Point2, pt2 };
+use nannou::{prelude::{ Point2, pt2 }, draw::primitive::Ellipse};
 use rustfft::num_complex::Complex32;
 
 #[test]
@@ -36,13 +36,15 @@ fn compute_epicycles_from_polyline() {
       radius: 17.09_f32,
       frequency: 0,
       phase: 0.3588_f32,
-      vector: pt2(16_f32, 6_f32)
+      vector: pt2(16_f32, 6_f32),
+      ellipse: Some(Ellipse::radius(Ellipse::default(), 17.09_f32)),
     },
     Epicycle {
       radius: 2.83_f32,
       frequency: 1,
       phase: -std::f32::consts::FRAC_PI_4,
-      vector: pt2(2_f32, -2_f32)
+      vector: pt2(2_f32, -2_f32),
+      ellipse: Some(Ellipse::radius(Ellipse::default(), 2.83_f32)),
     },
   ];
   let pl: Vec<Point2> = vec![

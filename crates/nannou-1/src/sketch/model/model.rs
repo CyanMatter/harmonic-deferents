@@ -1,15 +1,14 @@
 use std::time::Duration;
-use nannou::{prelude::{ Point2, PI }, draw::primitive::ellipse::Ellipse };
+use nannou::prelude::{ Point2, PI };
 use rustfft::num_complex::Complex32;
 use super::{figure::random_vertices, ToMultiComplex32};
-use super::epicycle::{ Epicycle, epicycles_from_cfds, compute_all_renders };
+use super::epicycle::{ Epicycle, epicycles_from_cfds, sort_by_radius };
 use crate::fourier::fft;
 
 #[derive(Default)]
 pub struct Model {
 	pub vertices: Vec<Point2>,
 	pub epicycles: Vec<Epicycle>,
-	pub ellipses: Vec<Ellipse>,
 	pub epicycle_path: Vec<Point2>,
   pub t_elapsed: u128,
   pub t_fq: f32,
@@ -24,13 +23,7 @@ pub trait Constants {
 }
 
 impl Model {
-	pub fn set_period_duration(&mut self, seconds: f32) {
-		let dur = Duration::from_secs_f32(seconds);
-    self.t_period = dur.as_millis();
-    self.t_fq = 2_f32 * PI / (self.t_period as f32);
-	}
-
-  pub fn new_random_polygon(&mut self, left: f32, bottom: f32) {
+	pub fn new_random_polygon(&mut self, left: f32, bottom: f32) {
 		//! Debug
 		self.t_elapsed = 0;
     self.vertices = random_vertices(Model::N_POINTS, left, bottom);
@@ -39,7 +32,14 @@ impl Model {
 		// Create epicycles that describe the sequence of vertices.
 		fft(&mut cfds);
 		self.epicycles = epicycles_from_cfds(&cfds);
+		sort_by_radius(&mut self.epicycles);
   }
+	
+	pub fn set_period_duration(&mut self, seconds: f32) {
+		let dur = Duration::from_secs_f32(seconds);
+    self.t_period = dur.as_millis();
+    self.t_fq = 2_f32 * PI / (self.t_period as f32);
+	}
 
 	pub fn advance_time(&mut self, t_since_last_update: Duration) {
     if self.is_repeat_period { self.is_repeat_period = false; }

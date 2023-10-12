@@ -28,12 +28,12 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 	// Background
 	draw.background().color(WHITE);
 	// Epicycles
-	for ellipse in _model.ellipses.clone() {
-		draw.a(ellipse)
-			.stroke(nannou::color::CRIMSON)
-			.stroke_weight(Model::WEIGHT)
-			.no_fill()
-			.finish();
+	for epicycle in _model.epicycles.iter() {
+		let ellipse = epicycle.ellipse
+			.as_ref()
+			.unwrap()
+			.clone();
+		draw.a(ellipse).finish();
 	}
 	// Random polygon
 	draw.polyline()
