@@ -55,7 +55,6 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 async fn create_window(app: &App) {
 	let device_desc = DeviceDescriptor {
 		limits: Limits {
-			max_texture_dimension_2d: 8192,
 			..Limits::downlevel_webgl2_defaults()
 		},
 		..Default::default()
