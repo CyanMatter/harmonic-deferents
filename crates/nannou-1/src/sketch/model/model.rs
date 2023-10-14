@@ -1,4 +1,6 @@
+use std::ops::Deref;
 use std::time::Duration;
+use itertools::Itertools;
 use nannou::prelude::{ Point2, PI };
 use rustfft::num_complex::Complex32;
 use super::{figure::random_vertices, ToMultiComplex32};
@@ -34,6 +36,21 @@ impl Model {
 		self.epicycles = epicycles_from_cfds(&cfds);
 		sort_by_radius(&mut self.epicycles);
   }
+
+	fn polygon_distance(&self) -> f32 {
+		assert!(!self.vertices.is_empty());
+
+		let mut sum = 0_f32;
+		let iter = self.vertices.iter().circular_tuple_windows();
+		for (prev, next) in iter {
+			sum += prev.distance(*next);
+		}
+		sum
+	}
+
+	pub fn interpolate(&mut self, amount: u64) {
+		let dis = self.polygon_distance();
+	}
 	
 	pub fn set_period_duration(&mut self, seconds: f32) {
 		let dur = Duration::from_secs_f32(seconds);
