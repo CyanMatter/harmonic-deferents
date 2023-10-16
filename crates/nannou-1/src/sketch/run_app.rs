@@ -39,8 +39,15 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 	draw.polyline()
 		.weight(Model::WEIGHT)
 		.join_round()
-		.points_closed(_model.vertices.clone())
+		.points_closed(_model.sketch_vertices.clone())
 		.finish();
+	// Resampled vertices on polygon
+	for v in _model.resampled_vertices.iter() {
+		draw.ellipse()
+			.xy(*v)
+			.radius(1.0)
+			.color(MAGENTA);
+	}
 	// Epicycle path
 	draw.polyline()
 		.weight(Model::WEIGHT)

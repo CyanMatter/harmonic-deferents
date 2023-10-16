@@ -1,4 +1,3 @@
-use std::ops::Deref;
 use std::time::Duration;
 use itertools::Itertools;
 use nannou::prelude::{ Point2, PI };
@@ -9,7 +8,8 @@ use crate::fourier::fft;
 
 #[derive(Default)]
 pub struct Model {
-	pub vertices: Vec<Point2>,
+	pub sketch_vertices: Vec<Point2>,
+	pub resampled_vertices: Vec<Point2>,
 	pub epicycles: Vec<Epicycle>,
 	pub epicycle_path: Vec<Point2>,
   pub t_elapsed: u128,
@@ -21,36 +21,55 @@ pub struct Model {
 
 pub trait Constants {
 	const WEIGHT: f32 = 3.0;
-	const N_POINTS: usize = 8;
+	const N_POINTS: usize = 4;
+}
+
+fn distances_between_vertices(vertices: &Vec<Point2>) -> Vec<f32> {
+	let mut distances: Vec<f32> = Vec::with_capacity(vertices.len());
+	let iter = vertices.iter().circular_tuple_windows();
+	for (prev, next) in iter {
+		distances.push(prev.distance(*next));
+	}
+	distances
+}
+
+fn resample_polygon(vertices: &Vec<Point2>, num_pts: usize) -> Vec<Point2> {
+	assert!(!vertices.is_empty());
+	let mut resample = Vec::with_capacity(num_pts);
+	resample.push(*vertices.first().unwrap());
+	
+	let vertex_pair_iter = vertices.iter().circular_tuple_windows();
+	let distances = distances_between_vertices(vertices);
+	let distance_iter = distances.iter();
+	let tot_dist: f32 = distances.iter().sum();
+	let arc_length: f32 = tot_dist / (num_pts as f32);
+	
+	let mut t = 0_f32;
+	for ((prev, next), distance) in vertex_pair_iter.zip(distance_iter) {
+		let d_t = *distance / arc_length;
+		while ((t + d_t) >= (resample.len() as f32)) && (resample.len() < num_pts) {
+			let s = (resample.len() as f32 - t) / d_t;
+			let v = prev.lerp(*next, s);
+			resample.push(v);
+		}
+		t += d_t
+	}
+	resample
 }
 
 impl Model {
 	pub fn new_random_polygon(&mut self, left: f32, bottom: f32) {
 		//! Debug
 		self.t_elapsed = 0;
-    self.vertices = random_vertices(Model::N_POINTS, left, bottom);
+    self.sketch_vertices = random_vertices(Model::N_POINTS, left, bottom);
+		self.resampled_vertices = resample_polygon(&self.sketch_vertices, 50);
 		// Conversion from similar structs Point2 -> Complex32 needed.
-		let mut cfds: Vec<Complex32> = self.vertices.as_complex32_vec();
+		let mut cfds: Vec<Complex32> = self.resampled_vertices.as_complex32_vec();
 		// Create epicycles that describe the sequence of vertices.
 		fft(&mut cfds);
 		self.epicycles = epicycles_from_cfds(&cfds);
 		sort_by_radius(&mut self.epicycles);
   }
-
-	fn polygon_distance(&self) -> f32 {
-		assert!(!self.vertices.is_empty());
-
-		let mut sum = 0_f32;
-		let iter = self.vertices.iter().circular_tuple_windows();
-		for (prev, next) in iter {
-			sum += prev.distance(*next);
-		}
-		sum
-	}
-
-	pub fn interpolate(&mut self, amount: u64) {
-		let dis = self.polygon_distance();
-	}
 	
 	pub fn set_period_duration(&mut self, seconds: f32) {
 		let dur = Duration::from_secs_f32(seconds);
