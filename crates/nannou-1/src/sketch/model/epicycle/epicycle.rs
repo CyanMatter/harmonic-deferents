@@ -1,4 +1,4 @@
-use nannou::{ prelude::{ Point2, pt2 }, draw::primitive::{ellipse::Ellipse, polygon::SetPolygon}, lyon::geom::euclid::default, color::ConvertInto };
+use nannou::{ prelude::{ Point2, pt2 }, draw::primitive::ellipse::Ellipse };
 use rustfft::num_complex::Complex;
 
 pub struct Epicycle {
@@ -54,22 +54,24 @@ impl Epicycle {
   }
 }
 
-pub fn from_data(cfd: &Complex<f32>, fq: i64) -> Epicycle {
-  let temp: f32 = cfd.re * cfd.re + cfd.im * cfd.im;
-  if temp == 0_f32 { return Epicycle::NULL; }
+pub fn from_data(cfd: &Complex<f32>, fq: i64) -> Option<Epicycle> {
+  let temp: f32 = (cfd.re * cfd.re) + (cfd.im * cfd.im);
+  if temp == 0_f32 {
+    return None;
+  }
   let r: f32 = temp.sqrt();
 
   let ph: f32 = cfd.im.atan2(cfd.re);
   let v = vector(0_f32, r, fq, ph);
   let el = Ellipse::radius(Ellipse::default(), r);
 
-  Epicycle {
+  Some(Epicycle {
     radius: r,
     frequency: fq,
     phase: ph,
     vector: v,
     ellipse: Some(el),
-  }
+  })
 }
 
 // Sorts a vector of epicycles in-place in order of largest to smallest radius

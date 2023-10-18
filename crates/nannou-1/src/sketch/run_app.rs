@@ -8,14 +8,28 @@ use super::model::{ Model, Constants, epicycle::compute_all_renders };
 
 impl Constants for Model {}
 
-fn update(_app: &App, _model: &mut Model, _update: Update) {
-	let win: Rect<f32> = _app.window_rect();
+static mut IS_FIRST_PASS: bool = true;	// !debug
 
+fn update(_app: &App, _model: &mut Model, _update: Update) {
 	if _model.is_repeat_period {
 		// !Debug
+		let win: Rect<f32> = _app.window_rect();
 		// Every 2^8 frames, generate a new polygon
-		_model.new_random_polygon(win.left() / 8_f32, win.bottom() / 8_f32);
+		_model.new_random_polygon(win.left(), win.bottom());
 	}
+
+	/*
+	if unsafe { IS_FIRST_PASS } {
+		_model.load_simple_square();
+		unsafe { IS_FIRST_PASS = false };
+		for (i, e) in _model.epicycles.iter().enumerate() {
+			let fq = e.frequency;
+			let r = e.radius;
+			let ph = e.phase;
+			console::log(format!("Epicycle {i}:\n\tfq:\t{fq}\n\tr:\t{r}\n\tph:\t{ph}\n", ));
+		}
+	}
+	*/
 
 	_model.advance_time(_update.since_last);
 	compute_all_renders(_model);

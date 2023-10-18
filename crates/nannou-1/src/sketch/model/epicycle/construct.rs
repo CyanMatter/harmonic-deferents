@@ -1,4 +1,3 @@
-use itertools::PeekingNext;
 use rustfft::num_complex::Complex;
 use super::epicycle::*;
 
@@ -12,36 +11,32 @@ pub fn epicycles_from_cfds(data: &Vec<Complex<f32>>) -> Vec<Epicycle> {
   // Initialize.
   let nyquist = (data.len() / 2) as i64;
   let mut epicycles = Vec::<Epicycle>::with_capacity(data.len());
-  let mut it = data.iter().peekable();
-
-  // !debug
-  crate::console::log(format!("data:\t{:#?}\nfq:\t{:?}", it.peek(), 0));
+  let mut it = data.iter();
 
   // Construct the first epicycle; it always has frequency = 0.
-  epicycles.push(from_data(it.next().unwrap(), 0));
+  if let Some(e) = from_data(it.next().unwrap(), 0) {
+    epicycles.push(e);
+  }
 
   // Construct most other epicycles.
   for fq in 1..nyquist {
-    // !debug
-    crate::console::log(format!("data:\t{:#?}\nfq:\t{:?}", it.peek(), fq));
-    epicycles.push(from_data(it.next().unwrap(), fq));
-    // !debug
-    crate::console::log(format!("data:\t{:#?}\nfq:\t{:?}", it.peek(), -fq));
-    epicycles.push(from_data(it.next_back().unwrap(), -fq));
+    if let Some(e) = from_data( it.next().unwrap(), fq) {
+      epicycles.push(e);
+    }
+    
+    if let Some(e) = from_data(it.next_back().unwrap(), -fq) {
+      epicycles.push(e);
+    }
   }
 
   // Construct the last epicycle(s).
-  // !debug
-  crate::console::log(format!("data:\t{:#?}\nfq:\t{:?}", it.peek(), nyquist));
-  epicycles.push(from_data(it.next().unwrap(), nyquist));
-  if data.len() % 2 != 0 {
-    // !debug
-    crate::console::log(format!("data:\t{:#?}\nfq:\t{:?}", it.peek(), -nyquist));
-    epicycles.push(from_data(it.next().unwrap(), -nyquist));
+  if let Some(e) = from_data(it.next().unwrap(), nyquist) {
+    epicycles.push(e);
   }
-
-  // Filter out all epicycles with 0 radius.
-  epicycles.into_iter()
-    .filter(|e| e.radius > 0_f32)
-    .collect()
+  if data.len() % 2 != 0 {
+    if let Some(e) = from_data(it.next().unwrap(), -nyquist) {
+      epicycles.push(e);
+    }
+  }
+  epicycles
 }

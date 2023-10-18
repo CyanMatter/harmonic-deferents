@@ -2,7 +2,7 @@ use std::time::Duration;
 use itertools::Itertools;
 use nannou::prelude::{ Point2, PI };
 use rustfft::num_complex::Complex32;
-use super::{figure::random_vertices, ToMultiComplex32};
+use super::{figure::random_vertices, figure::simple_square, ToMultiComplex32};
 use super::epicycle::{ Epicycle, epicycles_from_cfds, sort_by_radius };
 use crate::fourier::fft;
 
@@ -21,7 +21,7 @@ pub struct Model {
 
 pub trait Constants {
 	const WEIGHT: f32 = 3.0;
-	const N_POINTS: usize = 4;
+	const N_POINTS: usize = 8;
 }
 
 fn distances_between_vertices(vertices: &Vec<Point2>) -> Vec<f32> {
@@ -70,6 +70,20 @@ impl Model {
 		self.epicycles = epicycles_from_cfds(&cfds);
 		sort_by_radius(&mut self.epicycles);
   }
+
+	pub fn load_simple_square(&mut self) {
+		self.t_elapsed = 0;
+		self.sketch_vertices = simple_square();
+		self.resampled_vertices = self.sketch_vertices.clone();
+		// Conversion from similar structs Point2 -> Complex32 needed.
+		let mut cfds: Vec<Complex32> = self.sketch_vertices.as_complex32_vec();
+		// Create epicycles that describe the sequence of vertices.
+		fft(&mut cfds);
+		crate::console::log(format!("sketch_vertices:\n{:#?}", self.sketch_vertices));
+		crate::console::log(format!("cfds:\n{:#?}", cfds));
+		self.epicycles = epicycles_from_cfds(&cfds);
+		sort_by_radius(&mut self.epicycles);
+	}
 	
 	pub fn set_period_duration(&mut self, seconds: f32) {
 		let dur = Duration::from_secs_f32(seconds);

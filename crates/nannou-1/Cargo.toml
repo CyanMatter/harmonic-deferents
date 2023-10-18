@@ -25,6 +25,8 @@ wasm-bindgen = "0.2.83"
 wasm-bindgen-futures = "0.4.32"
 async-std = { version = "1.10.0", features = ["unstable"] }
 nannou = { version="0.18.1", git ="https://github.com/nannou-org/nannou.git", rev = "287be8a4d075b17332ca0bf34649f5d25e751c00", features =["wasm-experimental"]}
+# Please keep tabs on `rustfft` updates. An improved version for wasm was committed, but unreleased as of writing.
+# https://github.com/ejmahler/RustFFT/commit/147364419743caecb5b88334e44df04fc5c1bf89
 rustfft = "6.1.0"
 js-sys = "0.3.64"
 # The `console_error_panic_hook` crate provides better debugging of panics by
