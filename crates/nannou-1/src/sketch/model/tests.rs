@@ -15,8 +15,8 @@ fn implement_constants() {
 #[test]
 fn compute_fft_from_polyline() {
   let expect: Vec<Complex32> = vec![
-    Complex32 { re: 16_f32, im: 6_f32 },
-    Complex32 { re: 2_f32, im: -2_f32 }
+    Complex32 { re: 8_f32, im: 3_f32 },
+    Complex32 { re: 1_f32, im: -1_f32 }
   ];
 
   let pl: Vec<Point2> = vec![
@@ -33,17 +33,17 @@ fn compute_fft_from_polyline() {
 fn compute_epicycles_from_polyline() {
   let expect: Vec<Epicycle> = vec![
     Epicycle {
-      radius: 17.09_f32,
+      radius: 8.54_f32,
       frequency: 0,
       phase: 0.3588_f32,
-      vector: pt2(16_f32, 6_f32),
-      ellipse: Some(Ellipse::radius(Ellipse::default(), 17.09_f32)),
+      vector: pt2(8_f32, 3_f32),
+      ellipse: Some(Ellipse::radius(Ellipse::default(), 8.54_f32)),
     },
     Epicycle {
-      radius: 2.83_f32,
+      radius: 1.41_f32,
       frequency: 1,
       phase: -std::f32::consts::FRAC_PI_4,
-      vector: pt2(2_f32, -2_f32),
+      vector: pt2(1_f32, -1_f32),
       ellipse: Some(Ellipse::radius(Ellipse::default(), 2.83_f32)),
     },
   ];

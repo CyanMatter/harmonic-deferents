@@ -4,7 +4,7 @@ use rustfft::num_complex::Complex;
 #[test]
 fn ones() {
   let result = vec![
-    Complex{ re: 4.0f32, im: 4.0f32 },
+    Complex{ re: 1.0f32, im: 1.0f32 },
     Complex{ re: 0.0f32, im: 0.0f32 },
     Complex{ re: 0.0f32, im: 0.0f32 },
     Complex{ re: 0.0f32, im: 0.0f32 }

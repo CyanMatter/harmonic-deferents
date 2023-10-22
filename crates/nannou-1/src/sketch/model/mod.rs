@@ -2,6 +2,7 @@
 pub mod model;
 pub mod figure;
 pub mod epicycle;
+mod resample;
 #[cfg(test)]
 mod tests;
 
